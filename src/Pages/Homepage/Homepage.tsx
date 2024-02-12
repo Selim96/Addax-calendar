@@ -116,9 +116,7 @@ const Homepage: React.FC = () => {
                                     className={s.item}
                                 >{item.title}</div>)}
                         </div>)}
-                </div>
-                
-                
+                </div> 
             </main>
         </Container>)
 }

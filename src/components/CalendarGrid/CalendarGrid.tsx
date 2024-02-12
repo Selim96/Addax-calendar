@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Grid from '@mui/material/Grid';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import {nanoid } from 'nanoid'
 import s from './CalendarGrid.module.scss';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -58,38 +59,55 @@ function createYearCalendar(year: number) {
 
 const yearNum = 2024; // Задайте нужный год
 const yearCalendar = createYearCalendar(yearNum);
-console.log(yearCalendar);
-
 
 const CalendarGrid = () => {
     const [year, setYear] = useState<IMonth[]>(yearCalendar);
     const [month, setMonth] = useState<number[]>([]);
     const [monthNum, setMonthNum] = useState<number>(1);
 
+    const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
-
-    const onChangeMonth = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeMonthNum = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = Number(e.target.value);
         setMonthNum(value);
     }
 
     useEffect(()=> {
-        const curretnMont = year.find(({month})=> month === monthNum);
-        if(curretnMont) setMonth(curretnMont.days)
-    }, [monthNum])
+        const currentMonth = year.find(({month})=> month === monthNum);
+        const date = new Date(`${currentMonth?.month}.${1}.${yearNum}`); // Создаем объект Date для текущей даты
+        const dayOfWeek = date.getDay() === 0 ? 7 : date.getDay();
+        
+        if(currentMonth) {
+            const emptyDays = Array.from({ length: dayOfWeek - 1 }, () => 0);
+            const fullMonth = [...emptyDays, ...currentMonth.days];
+        
+            setMonth(fullMonth)
+        }
+    }, [monthNum]);
 
     return (
         <div>
             <div className={s.select_month}>
-                <select value={monthNum} onChange={onChangeMonth}>
-                    {year.map(({month}) => <option value={month}>{month}</option>)}
+                <select value={monthNum} onChange={onChangeMonthNum}>
+                    {year.map(({month}) => <option key={month} value={month}>{month}</option>)}
                 </select>
             </div>
             <ThemeProvider theme={theme}>
-                <Grid container rowSpacing={2} columnSpacing={[0, 0, 2, 6]} >
+                <Grid container rowSpacing={1} columnSpacing={[0, 0, 1, 1]} >
+                    {weekDaysNames.map(day=>{
+                        return (
+                            <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
+                                <Item className={s.itemClass}>
+                                    <div>
+                                        {day}
+                                    </div>
+                                </Item>
+                            </Grid>
+                        )
+                    })}
                     {month.map((item) => {
                         return (
-                            <Grid item xs={1.7} md={1.7} lg={1.7} key={item}>
+                            <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
                                 <Item className={s.itemClass}>
                                     <div>
                                         {item}
