@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import {IArticle} from '../interfaces/interfaces';
+// import {IArticle} from '../interfaces/interfaces';
 
-interface IResults {
-    count: number;
-    next: string;
-    previous: string | null;
-    results: IArticle[];
-}
+// interface IResults {
+//     count: number;
+//     next: string;
+//     previous: string | null;
+//     results: IArticle[];
+// }
 
 // https://api.spaceflightnewsapi.net/v3/articles
 const str ='https://api.spaceflightnewsapi.net/v4/articles/?limit=10&offset=0&summary_contains_one=%2C+&title_contains_one=nasa%2C%20space'
@@ -23,7 +23,7 @@ export class NewsAPI {
 
     private articleId: string | undefined = '';
 
-    private allNews = createAsyncThunk<IResults, undefined, {rejectValue: any}>(
+    private allNews = createAsyncThunk<any, undefined, {rejectValue: any}>(
         "allNews",
         async (_, { rejectWithValue }) => {
             const response = await fetch(`${this.baseURL}${this.newsEndPoint}/?limit=${this.limit}&offset=${this.limit * this.page}&summary_contains_one=${this.wordInSummery}&title_contains_one=${this.wordInTitle}`);
@@ -44,7 +44,7 @@ export class NewsAPI {
             return await response.json();
     }
 
-    private detailsNews = createAsyncThunk<IArticle, undefined, {rejectValue: any}>(
+    private detailsNews = createAsyncThunk<any, undefined, {rejectValue: any}>(
         "detailNews",
         async (_, { rejectWithValue }) => {
             const response = await fetch(`${this.baseURL}${this.newsEndPoint}/${this.articleId}`);
@@ -70,7 +70,7 @@ export class NewsAPI {
         }
     );
 
-    private nextPage = createAsyncThunk<IResults, undefined, {rejectValue: any}>(
+    private nextPage = createAsyncThunk<any, undefined, {rejectValue: any}>(
         "nextPage",
         async (_, { rejectWithValue }) => {
             const response = await fetch(`${this.baseURL}?limit=${this.limit}&offset=${this.limit * this.page}&summary_contains_one=${this.wordInSummery}&title_contains_one=${this.wordInTitle}`);

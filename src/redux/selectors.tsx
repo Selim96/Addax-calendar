@@ -1,27 +1,21 @@
-import  {IArticle, IState} from "../interfaces/interfaces";
+import  {IState} from "../interfaces/interfaces";
 
-const getAllNews = (state: IState) => state.allNews;
-const getCount = (state: IState) => state.count;
-const getNextPage = (state: IState) => state.nextPage;
+const getYearNum = (state: IState) => state.yearNum;
+const getMonthNum = (state: IState) => state.month;
+const getDaysCards = (state: IState) => state.daysCards;
+const getYearData = (state: IState) => state.yearData;
 const getFilter = (state: IState) => state.filterWords;
-const getDetails = (state: IState) => state.newsDetails;
 const getError = (state:IState) => state.error;
 const getLoading = (state: IState) => state.loading;
-const getModal = (state: IState) => state.modalIsOpen;
-const getIsFetching = (state: IState) => state.isFetching;
-const getIsMenuClicked = (state: IState) => state.isMenuClicked;
 
 const allSelectors = {
-    getAllNews,
-    getCount,
-    getNextPage,
+    getYearNum,
+    getMonthNum,
+    getDaysCards,
+    getYearData,
     getFilter,
-    getDetails,
     getError,
-    getLoading,
-    getModal,
-    getIsFetching,
-    getIsMenuClicked
+    getLoading
 }
 
 export default allSelectors;

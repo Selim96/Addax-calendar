@@ -11,7 +11,7 @@ const Homepage = lazy(() => import("./Pages/Homepage"));
 
 
 const App: React.FC = () => {
-  const isModalOpen = useAppSelector(allSelectors.getModal)
+ 
 
   return (
     <>

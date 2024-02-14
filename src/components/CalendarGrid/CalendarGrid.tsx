@@ -4,6 +4,11 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import {nanoid } from 'nanoid'
 import s from './CalendarGrid.module.scss';
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import allSelectors from "../../redux/selectors";
+import {saveChanges, changeDayCard} from '../../redux/slice';
+import { IDay, IItem } from "../../interfaces/interfaces";
+import AddInput from "../AddInput";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,7 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     maxWidth: 400,
-    // height: 530,
+    height: 150,
 }));
 
 const theme = createTheme({
@@ -31,73 +36,83 @@ const theme = createTheme({
   }
 });
 
-interface IMonth {
-    month: number,
-    days: number[]
-}
-
-function getDaysInMonth(month: number, year: number) {
-    // Первый день месяца с номером 0 - последний день предыдущего месяца
-    return new Date(year, month + 1, 0).getDate();
-}
-
-function createYearCalendar(year: number) {
-    const months = [];
-    for (let month = 0; month < 12; month++) {
-        const daysInMonth = getDaysInMonth(month, year);
-        const monthObj: IMonth = {
-            month: month + 1,
-            days: []
-        };
-        for (let day: number = 1; day <= daysInMonth; day++) {
-            monthObj.days.push(day);
-        }
-        months.push(monthObj);
-    }
-    return months;
-}
-
-const yearNum = 2024; // Задайте нужный год
-const yearCalendar = createYearCalendar(yearNum);
 
 const CalendarGrid = () => {
-    const [year, setYear] = useState<IMonth[]>(yearCalendar);
-    const [month, setMonth] = useState<number[]>([]);
-    const [monthNum, setMonthNum] = useState<number>(1);
+    const [currentItem, setCurrentItem] = useState<IItem | null>(null);
+    const [currentDay, setCurrentDay] = useState<IDay | null>(null);
+
+    const dispatch = useAppDispatch();
 
     const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
-    const onChangeMonthNum = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = Number(e.target.value);
-        setMonthNum(value);
+    const monthNum = useAppSelector(allSelectors.getMonthNum);
+    const daysCards=useAppSelector(allSelectors.getDaysCards);
+
+    function dragStartHandler(e: React.DragEvent<HTMLDivElement>, day: IDay, item: IItem): void {
+        console.log('drag', item);
+        setCurrentItem(item);
+        setCurrentDay(day);
     }
 
-    useEffect(()=> {
-        const currentMonth = year.find(({month})=> month === monthNum);
-        const date = new Date(`${currentMonth?.month}.${1}.${yearNum}`); // Создаем объект Date для текущей даты
-        const dayOfWeek = date.getDay() === 0 ? 7 : date.getDay();
-        
-        if(currentMonth) {
-            const emptyDays = Array.from({ length: dayOfWeek - 1 }, () => 0);
-            const fullMonth = [...emptyDays, ...currentMonth.days];
-        
-            setMonth(fullMonth)
+    function dragEndHandler(e: React.DragEvent<HTMLDivElement>): void {
+        e.currentTarget.style.background = 'white'
+    }
+
+    function dragOverHander(e: React.DragEvent<HTMLDivElement>): void {
+        e.preventDefault();
+        e.currentTarget.style.background = 'lightgray'
+    }
+
+    function dropHandler(e: React.DragEvent<HTMLDivElement>, day: IDay, item: IItem): void {
+        e.preventDefault();
+        console.log('drop on item', e.target)
+        e.currentTarget.style.background = "white"
+    }
+
+    function dragLeaveHandler(e:React.DragEvent<HTMLDivElement>) {
+        e.currentTarget.style.background = 'white'
+    }
+
+    function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, day: IDay) {
+        console.log('drop on board', )
+        const onDropItemId = (e.target as HTMLDivElement).id;
+        console.log(onDropItemId)
+        if(currentItem && currentDay) {
+            const currentIndex = currentDay.items.findIndex((elem: IItem)=> elem.id === currentItem.id);
+            console.log(currentIndex)
+            currentDay.items.splice(currentIndex, 1);
+            const dropIndex = day.items.findIndex((elem: IItem)=> elem.id === onDropItemId);
+            day.items.splice(dropIndex+1, 0, currentItem);
         }
-    }, [monthNum]);
+        const newDaysWithItems = daysCards ? daysCards.map(b => {
+            if(b.id === day.id) {
+                return day;
+            }
+            if(b.id === currentDay?.id) {
+                return currentDay;
+            }
+            return b;     
+        }) : undefined;
+
+        dispatch(changeDayCard(newDaysWithItems));
+        dispatch(saveChanges())
+        e.currentTarget.style.background = 'white'
+    }
+
+    useEffect(()=>{
+        return ()=>{dispatch(saveChanges())}
+    }, [])
+   
 
     return (
         <div>
-            <div className={s.select_month}>
-                <select value={monthNum} onChange={onChangeMonthNum}>
-                    {year.map(({month}) => <option key={month} value={month}>{month}</option>)}
-                </select>
-            </div>
+            
             <ThemeProvider theme={theme}>
                 <Grid container rowSpacing={1} columnSpacing={[0, 0, 1, 1]} >
                     {weekDaysNames.map(day=>{
                         return (
                             <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
-                                <Item className={s.itemClass}>
+                                <Item className={s.days_name}>
                                     <div>
                                         {day}
                                     </div>
@@ -105,12 +120,41 @@ const CalendarGrid = () => {
                             </Grid>
                         )
                     })}
-                    {month.map((item) => {
+                    {daysCards && daysCards.map((dayCard) => {
+                        const {id, items, holidays} = dayCard;
+                        if(id === 0) {
+                            return (
+                                <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
+                                <Item className={s.itemClass}>
+                                    <div key={nanoid()} className={s.empty_card}>
+                                        
+                                    </div>
+                                </Item>
+                            </Grid>
+                            )
+                        }
                         return (
                             <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
                                 <Item className={s.itemClass}>
-                                    <div>
-                                        {item}
+                                    <div key={nanoid()} className={s.day_card}
+                                        onDragOver={dragOverHander}
+                                        onDrop={(e)=>dropOnBoardHandler(e, dayCard)}
+                                        onDragLeave={dragLeaveHandler}
+                                    >
+                                        <div className={s.day_title}>{id}</div>
+                                        <AddInput cardId={id}/>
+                                        {items.map(item=>
+                                            <div key={nanoid()} id={`${item.id}`}
+                                                onDragOver={dragOverHander}
+                                                onDragLeave={dragLeaveHandler}
+                                                onDragStart={(e)=>dragStartHandler(e, dayCard, item)}
+                                                onDragEnd={dragEndHandler}
+                                                onDrop={(e)=>dropHandler(e, dayCard, item)}
+                                                draggable={true}
+                                                className={s.item_on_card}
+                                            >
+                                                {item.title}
+                                            </div>)}
                                     </div>
                                 </Item>
                             </Grid>
