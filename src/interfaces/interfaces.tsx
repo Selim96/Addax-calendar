@@ -25,7 +25,7 @@ export interface IState {
     yearNum: number,
     month: number,
     daysCards: IDay[] | undefined,
-    yearData: IYear[],
+    yearData: IYear[] | undefined,
     filterWords: string,
     error: any,
     loading: boolean,

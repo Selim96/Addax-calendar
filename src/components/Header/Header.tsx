@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import Media from 'react-media';
 import s from './Header.module.scss';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {changeMonth, changeYear, saveChanges} from "../../redux/slice";
+import {addDefaultYearData, changeMonth, changeYear, saveChanges} from "../../redux/slice";
+import allSelectors from '../../redux/selectors';
 
 const months = [
     "January", "February", "March", "April",
@@ -20,6 +21,8 @@ const Header: React.FC = () => {
     const [monthNum, setMonthNum] = useState<number>(currentMonthIndex); // 1-12
 
     const dispatch = useAppDispatch();
+
+    const yearData = useAppSelector(allSelectors.getYearData);
 
     const onChangeMonthNum = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = Number(e.target.value);

@@ -19,6 +19,7 @@ const App: React.FC = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<CalendarGrid />} />
+          {/* <Route path="/" element={<Homepage />} /> */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Suspense>
