@@ -45,14 +45,14 @@ const Homepage: React.FC = () => {
     }
 
     function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, day: IDay) {
-        // const onDropItemId = (e.target as HTMLDivElement).id;
+        const onDropItemId = (e.target as HTMLDivElement).id;
         if(currentCard && currentBoard && daysCards) {
             const newItems = day.items.filter(item=>item.id !== currentCard.id);
             const newDay = {...day, items: newItems}
 
             const currentIndex = currentBoard.items.indexOf(currentCard);
             currentBoard?.items.splice(currentIndex, 1);
-            const dropIndex = newDay.items.findIndex(elem=> elem.id === currentCard.id);
+            const dropIndex = newDay.items.findIndex(elem=> elem.id === onDropItemId);
             newDay.items.splice(dropIndex+1, 0, currentCard);
         
             const newAllDays = daysCards.map(b => {
