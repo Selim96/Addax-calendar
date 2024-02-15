@@ -83,9 +83,11 @@ const Homepage: React.FC = () => {
         }
         setBoards(boards.map(b => {
             if(b.id === board.id) {
+                console.log('return board')
                 return board;
             }
             if(b.id === currentBoard?.id) {
+                console.log('return currentBoard')
                 return currentBoard;
             }
             return b;     

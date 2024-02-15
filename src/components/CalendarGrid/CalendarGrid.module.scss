@@ -9,6 +9,30 @@
 .day_card {
     border: 2px solid rgb(12, 89, 233);
     height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+        max-height: 50%;
+        width: 3px;
+        border-radius: 40%;
+      }
+      
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background: transparent; 
+        // border-bottom:1px solid #41414D;
+      }
+       
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: #41414D; 
+        width: 2px;
+      }
+      
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+      }
 }
 
 .empty_card {
@@ -18,7 +42,7 @@
 
 .item_on_card {
     border: 1px solid;
-    padding: 8px;
+    padding: 2px;
     border-radius: 4px;
     cursor: grab;
 }

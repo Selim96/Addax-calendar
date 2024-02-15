@@ -45,28 +45,26 @@ const CalendarGrid = () => {
 
     const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
-    const monthNum = useAppSelector(allSelectors.getMonthNum);
     const daysCards=useAppSelector(allSelectors.getDaysCards);
 
     function dragStartHandler(e: React.DragEvent<HTMLDivElement>, day: IDay, item: IItem): void {
         console.log('drag', item);
         setCurrentItem(item);
         setCurrentDay(day);
-        console.log('drag1');
     }
 
     function dragEndHandler(e: React.DragEvent<HTMLDivElement>): void {
         e.currentTarget.style.background = 'white'
     }
 
-    function dragOverHander(e: React.DragEvent<HTMLDivElement>): void {
+    function dragOverHandler(e: React.DragEvent<HTMLDivElement>): void {
         e.preventDefault();
         e.currentTarget.style.background = 'lightgray'
     }
 
     function dropHandler(e: React.DragEvent<HTMLDivElement>, day: IDay, item: IItem): void {
         e.preventDefault();
-        console.log('drop on item', e.target)
+        // console.log('drop on item', e.target)
         e.currentTarget.style.background = "white"
     }
 
@@ -75,18 +73,18 @@ const CalendarGrid = () => {
     }
 
     function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, day: IDay) {
-        
         const onDropItemId = (e.target as HTMLDivElement).id;
         console.log('drop on board', onDropItemId)
+
         if(currentItem && currentDay) {
-            // const currentIndex = currentDay.items.findIndex((elem: IItem)=> elem.id === currentItem.id);
-            // console.log(currentIndex)
-            const newCurrentItems = currentDay.items.filter((item)=>item.id !== currentItem.id);
-            setCurrentDay({...currentDay, items: newCurrentItems})
-            
-            const dropIndex = day.items.findIndex((elem: IItem)=> elem.id === onDropItemId);
-            const dayToRecord = {...day};
-            console.log('dropIndex', dropIndex)
+            const newCurrentItems = currentDay.items.filter((item)=>{ 
+                return item.id !== currentItem.id;
+            });
+            const dayToRecord = {...day, items: [...day.items]};
+            if(currentDay.id === day.id) {
+                dayToRecord.items = newCurrentItems;
+            }
+            const dropIndex = dayToRecord.items.findIndex((elem: IItem)=> elem.id === onDropItemId);
             dayToRecord.items.splice(dropIndex+1, 0, currentItem);
         
             const newDaysWithItems = daysCards ? daysCards.map(b => {
@@ -94,7 +92,7 @@ const CalendarGrid = () => {
                     return dayToRecord;
                 }
                 if(b.id === currentDay?.id) {
-                    return currentDay;
+                    return {...currentDay, items: newCurrentItems};
                 }
                 return b;     
             }) : undefined;
@@ -133,7 +131,6 @@ const CalendarGrid = () => {
                                 <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
                                 <Item className={s.itemClass}>
                                     <div key={nanoid()} className={s.empty_card}>
-                                        
                                     </div>
                                 </Item>
                             </Grid>
@@ -143,7 +140,7 @@ const CalendarGrid = () => {
                             <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
                                 <Item className={s.itemClass}>
                                     <div key={id} className={s.day_card}
-                                        onDragOver={dragOverHander}
+                                        onDragOver={dragOverHandler}
                                         onDrop={(e)=>dropOnBoardHandler(e, dayCard)}
                                         onDragLeave={dragLeaveHandler}
                                     >
@@ -151,9 +148,9 @@ const CalendarGrid = () => {
                                         <AddInput cardId={id}/>
                                         {items.map((item, index)=>
                                             <div key={nanoid()} id={`${item.id}`}
-                                                onDragOver={dragOverHander}
-                                                onDragLeave={dragLeaveHandler}
                                                 onDragStart={(e)=>dragStartHandler(e, dayCard, item)}
+                                                onDragOver={dragOverHandler}
+                                                onDragLeave={dragLeaveHandler}
                                                 onDragEnd={dragEndHandler}
                                                 onDrop={(e)=>dropHandler(e, dayCard, item)}
                                                 draggable={true}
