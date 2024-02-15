@@ -1,0 +1,52 @@
+.calendar_grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 столбцов для дней недели */
+    gap: 5px; /* Расстояние между ячейками */
+  }
+  
+  .calendar_day {
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+    width: 120px; /* Ширина ячейки */
+    height: 200px; /* Высота ячейки */
+    background-color: #f0f0f0; /* Цвет фона ячейки */
+    border-radius: 5px; /* Скругление углов */
+    border: 2px solid;
+    & input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+  
+  .calendar_day:hover {
+    // background-color: #e0e0e0;
+  }
+  
+  .calendar_day:active {
+    // background-color: #c0c0c0;
+  }
+
+  .item_on_card {
+    border: 1px solid;
+    padding: 2px;
+    margin-bottom: 5px;
+    cursor: grab;
+  }
+
+  .example2 {
+    display: flex;
+    flex-wrap: wrap;
+
+    & .day {
+      width: 14.2%;
+      height: 200px;
+      border: 2px solid;
+      & input {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  }
+  

@@ -1,42 +1,33 @@
 import React, { ReactHTML, useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import allSelectors from '../../redux/selectors';
-import Container from "../../components/Container";
 import s from './Homepage.module.scss';
+import { IDay, IItem } from "../../interfaces/interfaces";
+import AddInput from "../../components/AddInput";
+import { nanoid } from "nanoid";
+import { changeDayCard, saveChanges } from "../../redux/slice";
 
-interface ICard {
-    id: number; order: number; text: string;
-}
-
-interface IItem {
-    id: number,
-    title: string
-}
-
-interface IBoard {
-    id: number,
-    title: string,
-    items: IItem[]
-}
 
 const Homepage: React.FC = () => {
-    const [boards, setBoards] = useState<IBoard[]>([
-        {id:1, title: "TODO", items: [{id:1, title: 'go to shop'}, {id:2,title:'write artical'}, {id: 3, title:'read book'}]},
-        {id:2, title: "InProgress", items: [{id:4, title: 'learn JS'}, {id:5,title:'learn Node'}, {id: 6, title:'check car'}]},
-        {id:3, title: "Done", items: [{id:7, title: 'sleep'}, {id:8,title:'eat'}, {id:9, title:'cook'}]}
-    ]);
+    const [allDays, setAllDays] = useState<IDay[]>(
+        [{id:1, items:[{id:'qerqewr',title: 'some', labels:[]}], holidays:null}, {id:2, items:[], holidays:null}, {id:3, items:[], holidays:null}, {id:4, items:[], holidays:null}, {id:5, items:[], holidays:null}]
+    );
     const [currentCard, setCurrentCard] = useState<IItem | null>(null);
-    const [currentBoard, setCurrentBoard] = useState<IBoard | null>(null);
+    const [currentBoard, setCurrentBoard] = useState<IDay | null>(null);
+    const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
+    const daysCards=useAppSelector(allSelectors.getDaysCards);
 
-    function dragStartHandler(e: React.DragEvent<HTMLDivElement>, board: IBoard, item: IItem): void {
+    const dispatch = useAppDispatch();
+
+    function dragStartHandler(e: React.DragEvent<HTMLDivElement>, day: IDay, item: IItem): void {
         console.log('drag', item);
-        setCurrentCard(item);
-        setCurrentBoard(board);
+        setCurrentCard({...item});
+        setCurrentBoard({...day, items: [...day.items]});
     }
 
     function dragEndHandler(e: React.DragEvent<HTMLDivElement>): void {
-        e.currentTarget.style.background = 'white'
+        e.currentTarget.style.background = 'white';
     }
 
     function dragOverHander(e: React.DragEvent<HTMLDivElement>): void {
@@ -44,24 +35,8 @@ const Homepage: React.FC = () => {
         e.currentTarget.style.background = 'lightgray'
     }
 
-    function dropHandler(e: React.DragEvent<HTMLDivElement>, board: IBoard, item: IItem): void {
+    function dropHandler(e: React.DragEvent<HTMLDivElement>, board: IDay, item: IItem): void {
         e.preventDefault();
-        console.log('drop on item', e.target)
-        // if(currentCard && currentBoard) {
-        //     const currentIndex = currentBoard.items.indexOf(currentCard);
-        //     currentBoard?.items.splice(currentIndex, 1);
-        //     const dropIndex = board.items.indexOf(item);
-        //     board.items.splice(dropIndex, 0, currentCard);
-        // }
-        // setBoards(boards.map(b => {
-        //         if(b.id === board.id) {
-        //             return board;
-        //         }
-        //         if(b.id === currentBoard?.id) {
-        //             return currentBoard;
-        //         }
-        //     return b;     
-        // }))
         e.currentTarget.style.background = "white"
     }
 
@@ -69,44 +44,50 @@ const Homepage: React.FC = () => {
         e.currentTarget.style.background = 'white'
     }
 
-    function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, board: IBoard) {
-        console.log('drop on board', )
-        
-        const onDropItemId = Number((e.target as HTMLDivElement).id);
-        console.log(onDropItemId)
-        if(currentCard && currentBoard) {
+    function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, day: IDay) {
+        // const onDropItemId = (e.target as HTMLDivElement).id;
+        if(currentCard && currentBoard && daysCards) {
+            const newItems = day.items.filter(item=>item.id !== currentCard.id);
+            const newDay = {...day, items: newItems}
+
             const currentIndex = currentBoard.items.indexOf(currentCard);
             currentBoard?.items.splice(currentIndex, 1);
-            const dropIndex = board.items.findIndex(elem=> elem.id === onDropItemId);
-            board.items.splice(dropIndex+1, 0, currentCard);
-            
+            const dropIndex = newDay.items.findIndex(elem=> elem.id === currentCard.id);
+            newDay.items.splice(dropIndex+1, 0, currentCard);
+        
+            const newAllDays = daysCards.map(b => {
+                if(b.id === newDay.id) {
+                    return newDay;
+                }
+                if(b.id === currentBoard?.id) {
+                    return currentBoard;
+                }
+                return b;     
+            });
+            dispatch(changeDayCard(newAllDays));
+            dispatch(saveChanges());
+            e.currentTarget.style.background = 'white'
         }
-        setBoards(boards.map(b => {
-            if(b.id === board.id) {
-                console.log('return board')
-                return board;
-            }
-            if(b.id === currentBoard?.id) {
-                console.log('return currentBoard')
-                return currentBoard;
-            }
-            return b;     
-        }))
-        e.currentTarget.style.background = 'white'
     }
 
     return (
-        <Container>
             <main className={s.mainBox}>
-                <h1 className={s.title} id="title">Calendar</h1>
                 <div className={s.card_list}>
-                    {boards.map(board=>
+                    {daysCards && daysCards.map(board=>{
+                        if(board.id === 0) {
+                            return (
+                                <div key={nanoid()} className={s.board}>
+                                </div>
+                            )
+                        }
+                        return (
                         <div key={board.id} className={s.board}
                             onDragOver={dragOverHander}
                             onDrop={(e)=>dropOnBoardHandler(e, board)}
                             onDragLeave={dragLeaveHandler}
                         >
-                            <div className={s.board_title}>{board.title}</div>
+                            <div className={s.board_title}>{board.id}</div>
+                            <AddInput cardId={board.id}/>
                             {board.items.map(item=>
                                 <div key={item.id} id={`${item.id}`}
                                     onDragOver={dragOverHander}
@@ -117,10 +98,20 @@ const Homepage: React.FC = () => {
                                     draggable={true}
                                     className={s.item}
                                 >{item.title}</div>)}
-                        </div>)}
+                        </div>)})}
                 </div> 
             </main>
-        </Container>)
+    )
 }
 
 export default Homepage;
+
+
+
+
+
+// const [boards, setBoards] = useState<IBoard[]>([
+    //     {id:1, title: "TODO", items: [{id:1, title: 'go to shop'}, {id:2,title:'write artical'}, {id: 3, title:'read book'}]},
+    //     {id:2, title: "InProgress", items: [{id:4, title: 'learn JS'}, {id:5,title:'learn Node'}, {id: 6, title:'check car'}]},
+    //     {id:3, title: "Done", items: [{id:7, title: 'sleep'}, {id:8,title:'eat'}, {id:9, title:'cook'}]}
+    // ]);

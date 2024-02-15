@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Grid from '@mui/material/Grid';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import {nanoid } from 'nanoid'
+import {nanoid } from 'nanoid';
 import s from './CalendarGrid.module.scss';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import allSelectors from "../../redux/selectors";
@@ -38,12 +38,14 @@ const theme = createTheme({
 
 
 const CalendarGrid = () => {
+    const [allDays, setAllDays] = useState<IDay[]>(
+        [{id:1, items:[{id:'qerqewr',title: 'some', labels:[]}], holidays:null}, {id:2, items:[], holidays:null}, {id:3, items:[], holidays:null}, {id:4, items:[], holidays:null}, {id:5, items:[], holidays:null}]
+    );
     const [currentItem, setCurrentItem] = useState<IItem | null>(null);
     const [currentDay, setCurrentDay] = useState<IDay | null>(null);
+    const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
     const dispatch = useAppDispatch();
-
-    const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
     const daysCards=useAppSelector(allSelectors.getDaysCards);
 
@@ -103,15 +105,35 @@ const CalendarGrid = () => {
         }
     }
 
-    useEffect(()=>{
-        return ()=>{dispatch(saveChanges())}
-    }, [])
+    function dropOnBoardHandler1(e:React.DragEvent<HTMLDivElement>, board: IDay) {
+        const onDropItemId = (e.target as HTMLDivElement).id;
+        console.log(onDropItemId)
+
+        if(currentItem && currentDay) {
+            const currentIndex = currentDay.items.indexOf(currentItem);
+            currentDay?.items.splice(currentIndex, 1);
+            const dropIndex = board.items.findIndex(elem=> elem.id === onDropItemId);
+            board.items.splice(dropIndex+1, 0, currentItem);
+            
+        }
+        setAllDays(allDays.map(b => {
+            if(b.id === board.id) {
+                console.log('return board')
+                return board;
+            }
+            if(b.id === currentDay?.id) {
+                console.log('return currentDay')
+                return currentDay;
+            }
+            return b;     
+        }))
+        e.currentTarget.style.background = 'white'
+    }
    
 
     return (
         <div>
-            
-            <ThemeProvider theme={theme}>
+            {/* <ThemeProvider theme={theme}> */}
                 <Grid container rowSpacing={1} columnSpacing={[0, 0, 1, 1]} >
                     {weekDaysNames.map(day=>{
                         return (
@@ -129,11 +151,11 @@ const CalendarGrid = () => {
                         if(id === 0) {
                             return (
                                 <Grid item xs={1.7} md={1.7} lg={1.7} key={nanoid()}>
-                                <Item className={s.itemClass}>
-                                    <div key={nanoid()} className={s.empty_card}>
-                                    </div>
-                                </Item>
-                            </Grid>
+                                    <Item className={s.itemClass}>
+                                        <div key={nanoid()} className={s.empty_card}>
+                                        </div>
+                                    </Item>
+                                </Grid>
                             )
                         }
                         return (
@@ -164,7 +186,7 @@ const CalendarGrid = () => {
                         )
                     })}
                 </Grid>
-            </ThemeProvider>
+            {/* </ThemeProvider> */}
         </div>
     )
 }

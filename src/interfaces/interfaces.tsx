@@ -6,7 +6,7 @@ export interface IItem {
 
 export interface IDay {
     id: number,
-    items:IItem[] | [],
+    items:IItem[],
     holidays: null
 };
 
