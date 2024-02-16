@@ -27,21 +27,27 @@ const Homepage: React.FC = () => {
     }
 
     function dragEndHandler(e: React.DragEvent<HTMLDivElement>): void {
-        e.currentTarget.style.background = 'white';
+        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.border = 'none';
     }
 
     function dragOverHander(e: React.DragEvent<HTMLDivElement>): void {
         e.preventDefault();
-        e.currentTarget.style.background = 'lightgray'
+        e.currentTarget.style.border = '1px solid ';
+    }
+    function dragOverHanderItem(e: React.DragEvent<HTMLDivElement>): void {
+        e.preventDefault();
+        e.currentTarget.style.boxShadow = '0px 6px 5px 0px rgba(0,0,0,0.56)';
     }
 
-    function dropHandler(e: React.DragEvent<HTMLDivElement>, board: IDay, item: IItem): void {
+    function dropHandler(e: React.DragEvent<HTMLDivElement>): void {
         e.preventDefault();
-        e.currentTarget.style.background = "white"
+        e.currentTarget.style.boxShadow = 'none';
     }
 
     function dragLeaveHandler(e:React.DragEvent<HTMLDivElement>) {
-        e.currentTarget.style.background = 'white'
+        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.border = 'none';
     }
 
     function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, day: IDay) {
@@ -64,19 +70,27 @@ const Homepage: React.FC = () => {
                 }
                 return b;     
             });
+            console.log(newAllDays)
             dispatch(changeDayCard(newAllDays));
             dispatch(saveChanges());
-            e.currentTarget.style.background = 'white'
+            e.currentTarget.style.scale = '1';
+            e.currentTarget.style.border = 'none';
         }
     }
 
     return (
             <main className={s.mainBox}>
+                <div className={s.weekdays_box}>
+                    {weekDaysNames.map(dayName=>
+                    <div className={s.weekdays_name}>
+                        {dayName}
+                    </div>)}
+                </div>
                 <div className={s.card_list}>
                     {daysCards && daysCards.map(board=>{
                         if(board.id === 0) {
                             return (
-                                <div key={nanoid()} className={s.board}>
+                                <div key={nanoid()} className={`${s.board} ${s.empty_board} `}>
                                 </div>
                             )
                         }
@@ -88,16 +102,18 @@ const Homepage: React.FC = () => {
                         >
                             <div className={s.board_title}>{board.id}</div>
                             <AddInput cardId={board.id}/>
-                            {board.items.map(item=>
-                                <div key={item.id} id={`${item.id}`}
-                                    onDragOver={dragOverHander}
-                                    onDragLeave={dragLeaveHandler}
-                                    onDragStart={(e)=>dragStartHandler(e, board, item)}
-                                    onDragEnd={dragEndHandler}
-                                    onDrop={(e)=>dropHandler(e, board, item)}
-                                    draggable={true}
-                                    className={s.item}
-                                >{item.title}</div>)}
+                                {/* <div className={s.list_items}> */}
+                                    {board.items.map(item=>
+                                    <div key={item.id} id={`${item.id}`}
+                                        onDragOver={dragOverHanderItem}
+                                        onDragLeave={dragLeaveHandler}
+                                        onDragStart={(e)=>dragStartHandler(e, board, item)}
+                                        onDragEnd={dragEndHandler}
+                                        onDrop={(e)=>dropHandler(e)}
+                                        draggable={true}
+                                        className={s.item}
+                                    >{item.title}</div>)}
+                                {/* </div> */}
                         </div>)})}
                 </div> 
             </main>

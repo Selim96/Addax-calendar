@@ -20,7 +20,8 @@ const AddInput: React.FC<Input> =({cardId})=> {
         setItemTitle(e.target.value);
     }
 
-    function addItem() {
+    function addItem(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         const newItem: IItem = {
             id: nanoid(),
             title: itemTitle,
@@ -38,10 +39,10 @@ const AddInput: React.FC<Input> =({cardId})=> {
     }
 
     return (
-        <div className={s.input_wrapper}>
-            <input type="text" value={itemTitle} onChange={changeItemTitle}/>
-            <button className={s.add_btn} onClick={addItem}>Add</button>
-        </div>
+        <form className={s.input_wrapper} onSubmit={addItem}>
+            <input type="text" value={itemTitle} onChange={changeItemTitle} placeholder="Add task" required={true}/>
+            <button className={s.add_btn} type="submit" >+</button>
+        </form>
     )
 }
 
