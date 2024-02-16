@@ -1,7 +1,7 @@
 export interface IItem {
     id: string,
     title: string,
-    labels: []
+    labels: string[]
 }
 
 export interface IDay {

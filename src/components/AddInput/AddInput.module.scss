@@ -10,7 +10,7 @@
         position: absolute;
         bottom: -5px;
         left: 0;
-        background-color: rgba(71, 70, 70, 0.452);
+        background-color: var(--line-color);
     }
     & input {
         width: 100%;

@@ -55,7 +55,6 @@ const Homepage: React.FC = () => {
             const newDay = {...day, items: newItems}
 
             const currentIndex = currentBoard.items.findIndex(item=>item.id=== currentCard.id);
-            console.log(currentIndex)
             currentBoard?.items.splice(currentIndex, 1);
             const dropIndex = newDay.items.findIndex(elem=> elem.id === onDropItemId);
             newDay.items.splice(dropIndex+1, 0, currentCard);
@@ -69,7 +68,7 @@ const Homepage: React.FC = () => {
                 }
                 return b;     
             });
-            console.log(newAllDays)
+            
             dispatch(changeDayCard(newAllDays));
             dispatch(saveChanges());
             e.currentTarget.style.scale = '1';
