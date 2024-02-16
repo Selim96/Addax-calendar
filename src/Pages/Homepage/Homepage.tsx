@@ -4,14 +4,12 @@ import allSelectors from '../../redux/selectors';
 import s from './Homepage.module.scss';
 import { IDay, IItem } from "../../interfaces/interfaces";
 import AddInput from "../../components/AddInput";
+import Item from "../../components/Item";
 import { nanoid } from "nanoid";
 import { changeDayCard, saveChanges } from "../../redux/slice";
 
 
 const Homepage: React.FC = () => {
-    const [allDays, setAllDays] = useState<IDay[]>(
-        [{id:1, items:[{id:'qerqewr',title: 'some', labels:[]}], holidays:null}, {id:2, items:[], holidays:null}, {id:3, items:[], holidays:null}, {id:4, items:[], holidays:null}, {id:5, items:[], holidays:null}]
-    );
     const [currentCard, setCurrentCard] = useState<IItem | null>(null);
     const [currentBoard, setCurrentBoard] = useState<IDay | null>(null);
     const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
@@ -102,18 +100,19 @@ const Homepage: React.FC = () => {
                         >
                             <div className={s.board_title}>{board.id}</div>
                             <AddInput cardId={board.id}/>
-                                {/* <div className={s.list_items}> */}
+                                <div className={s.list_items}>
                                     {board.items.map(item=>
-                                    <div key={item.id} id={`${item.id}`}
-                                        onDragOver={dragOverHanderItem}
-                                        onDragLeave={dragLeaveHandler}
-                                        onDragStart={(e)=>dragStartHandler(e, board, item)}
-                                        onDragEnd={dragEndHandler}
-                                        onDrop={(e)=>dropHandler(e)}
-                                        draggable={true}
-                                        className={s.item}
-                                    >{item.title}</div>)}
-                                {/* </div> */}
+                                        <Item 
+                                            item={item}
+                                            day={board}
+                                            onDragOver={dragOverHanderItem}
+                                            onDragLeave={dragLeaveHandler}
+                                            onDragStart={dragStartHandler}
+                                            onDragEnd={dragEndHandler}
+                                            onDrop={dropHandler}
+                                        />
+                                    )}
+                                </div>
                         </div>)})}
                 </div> 
             </main>
