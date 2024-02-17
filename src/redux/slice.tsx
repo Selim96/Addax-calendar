@@ -128,6 +128,8 @@ const calendarSlice = createSlice({
                     }
                     holidaysCollection.set(month, elem);
                 });
+
+                console.log(holidaysCollection)
                 
                 if(state.yearData) {
                     const otherYears = state.yearData.filter(({yearNumber})=>yearNumber!==state.yearNum);
