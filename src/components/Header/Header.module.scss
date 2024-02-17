@@ -16,6 +16,11 @@
     box-sizing: border-box;
 }
 
+.navigation {
+    display: flex;
+    align-items: center;
+}
+
 .change_buttons {
     display: flex;
     & .button {

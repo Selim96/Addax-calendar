@@ -8,6 +8,7 @@ import allSelectors from '../../redux/selectors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { HolidayAPI } from '../../services/api';
+import Download from '../Download';
 
 const months = [
     "January", "February", "March", "April",
@@ -57,19 +58,24 @@ const Header: React.FC = () => {
     }, [])
 
     return <header className={s.header}>
-        <div className={s.change_buttons}>
-            <div className={s.button} onClick={increaseMonth}><KeyboardArrowDownIcon /></div>
-            <div className={s.button} onClick={decreaseMonth}><KeyboardArrowUpIcon/></div>
+        <div className={s.navigation}>
+            <div className={s.change_buttons}>
+                <div className={s.button} onClick={increaseMonth}><KeyboardArrowDownIcon /></div>
+                <div className={s.button} onClick={decreaseMonth}><KeyboardArrowUpIcon/></div>
+            </div>
+            <div className={s.select_month}>
+                    <select value={monthNum} onChange={onChangeMonthNum} className={s.selector}>
+                        {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
+                    </select>
+            </div>
         </div>
+        
         <div className={s.month_name}>
             {`${months[monthNum-1]} ${yearNum}`}
         </div>
-        <div className={s.select_month}>
-                <select value={monthNum} onChange={onChangeMonthNum} className={s.selector}>
-                    {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
-                </select>
-        </div>
         
+        <Download/>
+
     </header>
 };
 
