@@ -27,6 +27,10 @@
             }
         }
     }
+
+    & .item_title {
+        text-transform: capitalize;
+    }
 }
 
 .label_wrapp {
