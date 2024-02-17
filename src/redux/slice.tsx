@@ -20,33 +20,11 @@ interface IResponse {
     localName: string;
 }
 
-function getDaysInMonth(month: number, year: number) {
-    // Первый день месяца с номером 0 - последний день предыдущего месяца
-    return new Date(year, month + 1, 0).getDate();
-  }
-  function createYearCalendar(year: number) {
-    const months = [];
-    for (let month = 0; month < 12; month++) {
-        const daysInMonth = getDaysInMonth(month, year);
-        const monthObj: IMonth = {
-            id: month + 1,
-            days: []
-        };
-        for (let day: number = 1; day <= daysInMonth; day++) {
-            monthObj.days.push({
-                id: day,
-                items: [],
-                holidays: ''
-            });
-        }
-        months.push(monthObj);
-    }
-    return {
-            yearNumber: year,
-            months,
-            country: null
-        };
-  }
+function getDayNum(holiday: string) {
+    const date = new Date(holiday);
+    const holidayDay = date.getDate();
+    return holidayDay;
+}
 
 const calendarSlice = createSlice({
     name: "calendar",
@@ -135,19 +113,28 @@ const calendarSlice = createSlice({
                     const otherYears = state.yearData.filter(({yearNumber})=>yearNumber!==state.yearNum);
                     const currentYear = state.yearData.find(({yearNumber})=>yearNumber===state.yearNum);
                     const newMonths = currentYear?.months.map((month)=>{
-                        if(holidaysCollection.has(month.id)) {
-                            const holiday = holidaysCollection.get(month.id);
-                            if(holiday) {
-                                const date = new Date(holiday?.date);
-                                const holidayDay = date.getDate();
+                        if(holidaysCollection.has(month.id) || holidaysCollection.has(month.id+20) || holidaysCollection.has(month.id+30)) {
+                            const holiday1 = holidaysCollection.get(month.id);
+                            const holiday2 = holidaysCollection.get(month.id+20);
+                            const holiday3 = holidaysCollection.get(month.id+30);
+                            
+                                const holidayDay1 = holiday1 && getDayNum(holiday1?.date);
+                                const holidayDay2 = holiday2 && getDayNum(holiday2?.date);
+                                const holidayDay3 = holiday3 && getDayNum(holiday3?.date);
                                 const newDays = month.days.map(day=>{
-                                    if(holidayDay === day.id) {
-                                        return {...day, holidays: `${holiday.localName}`}
+                                    if(holidayDay1 === day.id && holiday1) {
+                                        return {...day, holidays: `${holiday1.localName}`}
+                                    }
+                                    if(holidayDay2 === day.id && holiday2) {
+                                        return {...day, holidays: `${holiday2.localName}`}
+                                    }
+                                    if(holidayDay3 === day.id && holiday3) {
+                                        return {...day, holidays: `${holiday3.localName}`}
                                     }
                                     return day;
                                 })
                                 return {...month, days: newDays}
-                            }
+                            
                         }
                         return {...month};
                     });
