@@ -93,7 +93,7 @@ const Homepage: React.FC = () => {
                             )
                         }
                         return (
-                        <div key={board.id} className={s.board} style={board.holidays !== '' ? {backgroundColor: "hsl(11deg 74.85% 81.8%)"} : {}}
+                        <div key={board.id} className={s.board} style={board.holidays !== "" ? {backgroundColor: "hsl(11deg 74.85% 81.8%)"} : {}}
                             onDragOver={dragOverHander}
                             onDrop={(e)=>dropOnBoardHandler(e, board)}
                             onDragLeave={dragLeaveHandler}
