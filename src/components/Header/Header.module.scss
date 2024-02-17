@@ -46,3 +46,61 @@
     background-color: inherit;
     outline: none;
 }
+
+.select_label {
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+
+    &>p {
+        margin-right: 10px;
+        font-weight: 700;
+    }
+    &>.selector {
+        width: 120px;
+        font-weight: 700;
+        text-transform: capitalize;
+        
+        &.all {
+            background-color: var(--line-color);
+            color: var(--black-color);
+        }
+        &.green {
+            background-color: var(--green-label);
+            color: var(--black-color);
+        }
+        &.yellow {
+            background-color: var(--yellow-label);
+            color: var(--black-color);
+        }
+        &.red {
+            background-color: var(--red-label);
+            color: var(--black-color);
+        }
+    }
+    & option {
+        text-transform: capitalize;
+        text-align: center;
+        font-weight: 700;
+        text-shadow: 0 2px 5px var(--line-color);
+    }
+    // & .all {
+       
+        
+    //     color: var(--line-color);
+    // }
+    // & .green {
+       
+       
+    //     color: var(--green-label);
+    // }
+    // & .yellow {
+        
+        
+    //     color: var(--yellow-label);
+    // }
+    // & .red {
+        
+    //     color: var(--red-label);
+    // }
+}

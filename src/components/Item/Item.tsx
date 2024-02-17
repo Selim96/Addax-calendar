@@ -20,6 +20,7 @@ const Item: React.FC<Interface> =({item, day, onDragOver, onDragLeave, onDragSta
 
     const dispatch= useAppDispatch();
     const allDays = useAppSelector(allSelectors.getDaysCards);
+    const filterByLabels = useAppSelector(allSelectors.getFilter);
 
     const deleteItem =()=>{
         const newAllDays = allDays?.map((stateDay)=>{
@@ -63,8 +64,13 @@ const Item: React.FC<Interface> =({item, day, onDragOver, onDragLeave, onDragSta
     if(item.labels.includes('yellow')) yellowClass.push(s.yellow);
     if(item.labels.includes('red')) redClass.push(s.red);
 
+    let isShownItem = false;
+
+    if(filterByLabels === 'all') isShownItem= true;
+    if(item.labels.includes(filterByLabels)) isShownItem= true;
+
     return (
-        <div key={item.id} id={`${item.id}`} className={s.item}
+        <div key={item.id} id={`${item.id}`} className={s.item} style={isShownItem ? {display: 'block'} : {display: 'none'}}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
             onDragStart={(e)=>onDragStart(e, day, item)}

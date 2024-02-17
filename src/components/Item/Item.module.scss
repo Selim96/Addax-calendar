@@ -34,6 +34,7 @@
     width: 90%;
     justify-content: space-between;
     margin-bottom: 5px;
+    
 
     & .label {
         width: 30%;
@@ -66,4 +67,8 @@
     & .red {
         background-color: var(--red-label);
     }
+}
+
+.show_item {
+    display: block;
 }

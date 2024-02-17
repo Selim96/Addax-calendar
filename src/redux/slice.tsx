@@ -33,9 +33,6 @@ const calendarSlice = createSlice({
         changeYear: (state , action: PayloadAction<number>) => {
             state.yearNum = action.payload;
         },
-        addDefaultYearData: (state, action: PayloadAction<number>) => {
-            // state.yearData = [createYearCalendar(action.payload)];
-        },
         changeMonth: (state , action: PayloadAction<number>) => {
             state.month = action.payload;
             if(state.yearData) {
@@ -75,13 +72,9 @@ const calendarSlice = createSlice({
             state.daysCards=action.payload;
         },
 
-        resetAllNews: (state) => {
-            // state.allNews = [];
-        },
-        filterNews: (state, action: PayloadAction<string>) => {
+        filterByLabels: (state, action: PayloadAction<string>) => {
             state.filterWords = action.payload;
         },
-        
     },
     extraReducers:(builder) => {
         builder.addCase(holidayAPI.getPublicHolidays.pending, (state) => {
@@ -90,7 +83,7 @@ const calendarSlice = createSlice({
         });
         builder.addCase(holidayAPI.getPublicHolidays.fulfilled, (state: IState, action: PayloadAction<IResponse[]>) => {
                 state.loading = false;
-                console.log(action.payload);
+                
                 const holidaysCollection = new Map<number, IResponse>();
                 action.payload.forEach((elem)=>{
                     const dateString = elem.date;
@@ -158,5 +151,5 @@ const calendarSlice = createSlice({
 
 const reducer = calendarSlice.reducer;
 
-export const {addDefaultYearData, changeYear, changeMonth, saveChanges, changeDayCard, filterNews } = calendarSlice.actions;
+export const { changeYear, changeMonth, saveChanges, changeDayCard, filterByLabels } = calendarSlice.actions;
 export default reducer;

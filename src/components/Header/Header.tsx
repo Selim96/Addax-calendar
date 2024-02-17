@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Media from 'react-media';
 import s from './Header.module.scss';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {addDefaultYearData, changeMonth, changeYear, saveChanges} from "../../redux/slice";
+import {filterByLabels, changeMonth, changeYear, saveChanges} from "../../redux/slice";
 import allSelectors from '../../redux/selectors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -15,6 +15,7 @@ const months = [
     "May", "June", "July", "August",
     "September", "October", "November", "December"
 ];
+const labels = ['all', 'green', 'yellow', 'red'];
 
 const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
@@ -25,6 +26,7 @@ const holidayAPI = new HolidayAPI();
 const Header: React.FC = () => {
     const [yearNum, setYearNum] = useState<number>(currentYear);
     const [monthNum, setMonthNum] = useState<number>(currentMonthIndex); // 1-12
+    const [label, setLabel] = useState('all');
 
     const dispatch = useAppDispatch();
 
@@ -35,6 +37,11 @@ const Header: React.FC = () => {
         setMonthNum(value);
     }
 
+    const onChangeLabel = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
+        setLabel(value);
+    }
+
     const increaseMonth = () => {
         if(monthNum === 12) return;
         setMonthNum(monthNum +1);
@@ -43,6 +50,7 @@ const Header: React.FC = () => {
         if(monthNum === 1) return;
         setMonthNum(monthNum -1);
     }
+
     useEffect(()=> {
             dispatch(changeYear(yearNum));
             dispatch(holidayAPI.getPublicHolidays(yearNum));
@@ -50,12 +58,11 @@ const Header: React.FC = () => {
 
     useEffect(()=> {
         dispatch(changeMonth(monthNum));
-        // dispatch(saveChanges());
     }, [monthNum, yearData]);
 
     useEffect(()=>{
-        
-    }, [])
+        dispatch(filterByLabels(label));
+    }, [label]);
 
     return <header className={s.header}>
         <div className={s.navigation}>
@@ -66,6 +73,13 @@ const Header: React.FC = () => {
             <div className={s.select_month}>
                     <select value={monthNum} onChange={onChangeMonthNum} className={s.selector}>
                         {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
+                    </select>
+            </div>
+            <div className={s.select_label}>
+                <p>Label</p>
+                    <select value={label} onChange={onChangeLabel} className={`${s.selector} ${s[label]}`} >
+                        {labels.map((lb, index) => 
+                            <option key={index} value={lb} className={s[lb]}>{lb}</option>)}
                     </select>
             </div>
         </div>
