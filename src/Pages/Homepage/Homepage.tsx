@@ -1,4 +1,4 @@
-import React, { ReactHTML, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import allSelectors from '../../redux/selectors';
 import s from './Homepage.module.scss';
@@ -19,7 +19,6 @@ const Homepage: React.FC = () => {
     const dispatch = useAppDispatch();
 
     function dragStartHandler(e: React.DragEvent<HTMLDivElement>, day: IDay, item: IItem): void {
-        console.log('drag', item);
         setCurrentCard({...item});
         setCurrentBoard({...day, items: [...day.items]});
     }

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Media from 'react-media';
 import s from './Header.module.scss';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {filterByLabels, changeMonth, changeYear, saveChanges} from "../../redux/slice";
+import {filterByLabels, changeMonth, changeYear} from "../../redux/slice";
 import allSelectors from '../../redux/selectors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
