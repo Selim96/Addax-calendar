@@ -5,7 +5,6 @@ import Header from './components/Header';
 import { useAppSelector } from './redux/hooks';
 import allSelectors from './redux/selectors';
 import ErrorPage from './Pages/ErrorPage';
-import Example from './components/Example';
 
 const Homepage = lazy(() => import("./Pages/Homepage"));
 const CalendarGrid = lazy(() => import("./components/CalendarGrid"));
@@ -20,7 +19,6 @@ const App: React.FC = () => {
         <Routes>
           {/* <Route path="/" element={<CalendarGrid />} /> */}
           <Route path="/" element={<Homepage />} />
-          {/* <Route path="/" element={<Example />} /> */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Suspense>

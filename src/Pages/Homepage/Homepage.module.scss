@@ -89,8 +89,35 @@
 }
 
 .board_title {
-    font-size: 14px;
-    font-weight: 700;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    margin-bottom: 5px;
+    position: relative;
+    & p {
+        font-size: 14px;
+        font-weight: 700;
+        margin-right: 10px;
+    }
+    & span {
+        font-size: 14px;
+        color: var(--black-color);
+        position: absolute;
+        top: 0;
+        left: 26px;
+        z-index: 99;
+        width: calc(100% - 26px);
+        height: 100%;
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 5px;
+        &:hover {
+            background-color: var(--item-back-color);
+            width:auto;
+            padding: 3px;
+        }
+    }
 }
 
 

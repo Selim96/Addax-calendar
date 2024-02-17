@@ -93,12 +93,15 @@ const Homepage: React.FC = () => {
                             )
                         }
                         return (
-                        <div key={board.id} className={s.board}
+                        <div key={board.id} className={s.board} style={board.holidays !== '' ? {backgroundColor: "hsl(11deg 74.85% 81.8%)"} : {}}
                             onDragOver={dragOverHander}
                             onDrop={(e)=>dropOnBoardHandler(e, board)}
                             onDragLeave={dragLeaveHandler}
                         >
-                            <div className={s.board_title}>{board.id}</div>
+                            <div className={s.board_title}>
+                                <p>{board.id}</p>
+                                {board.holidays !== '' && <span>{board.holidays}</span>}
+                            </div>
                             <AddInput cardId={board.id}/>
                                 <div className={s.list_items}>
                                     {board.items.map(item=>

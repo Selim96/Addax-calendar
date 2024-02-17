@@ -18,7 +18,7 @@ function createYearCalendar(year: number) {
           monthObj.days.push({
               id: day,
               items: [],
-              holidays: null
+              holidays: ''
           });
       }
       months.push(monthObj);

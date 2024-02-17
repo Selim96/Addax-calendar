@@ -39,7 +39,7 @@ const theme = createTheme({
 
 const CalendarGrid = () => {
     const [allDays, setAllDays] = useState<IDay[]>(
-        [{id:1, items:[{id:'qerqewr',title: 'some', labels:[]}], holidays:null}, {id:2, items:[], holidays:null}, {id:3, items:[], holidays:null}, {id:4, items:[], holidays:null}, {id:5, items:[], holidays:null}]
+        [{id:1, items:[{id:'qerqewr',title: 'some', labels:[]}], holidays:''}, {id:2, items:[], holidays:''}, {id:3, items:[], holidays:''}, {id:4, items:[], holidays:''}, {id:5, items:[], holidays:''}]
     );
     const [currentItem, setCurrentItem] = useState<IItem | null>(null);
     const [currentDay, setCurrentDay] = useState<IDay | null>(null);
