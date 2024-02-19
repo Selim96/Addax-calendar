@@ -6,7 +6,7 @@ function getDaysInMonth(month: number, year: number) {
   // Первый день месяца с номером 0 - последний день предыдущего месяца
   return new Date(year, month + 1, 0).getDate();
 }
-function createYearCalendar(year: number) {
+ function createYearCalendar(year: number) {
   const months = [];
   for (let month = 0; month < 12; month++) {
       const daysInMonth = getDaysInMonth(month, year);

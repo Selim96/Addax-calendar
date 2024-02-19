@@ -23,7 +23,6 @@ const arrOfYears: number[] = [];
 for(let y = currentYear; y <= currentYear+20; y++) {
     arrOfYears.push(y);
 }
-console.log(arrOfYears)
 
 const holidayAPI = new HolidayAPI();
 
@@ -59,9 +58,16 @@ const Header: React.FC = () => {
         setMonthNum(monthNum -1);
     }
 
+    useEffect(()=>{
+        dispatch(holidayAPI.getPublicHolidays(yearNum));
+    }, []);
+
     useEffect(()=> {
             dispatch(changeYear(yearNum));
-            dispatch(holidayAPI.getPublicHolidays(yearNum));
+            if(!yearData?.some(year=>year.yearNumber === yearNum)) {
+                dispatch(holidayAPI.getPublicHolidays(yearNum));
+            }
+            dispatch(changeMonth(monthNum));
     }, [yearNum]);
 
     useEffect(()=> {
@@ -83,7 +89,7 @@ const Header: React.FC = () => {
                         {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
                     </select>
                     <select value={yearNum} onChange={onChangeYearNum} className={s.selector}>
-                        {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
+                        {arrOfYears.map((year, index) => <option key={index} value={year}>{year}</option>)}
                     </select>
             </div>
             <div className={s.select_label}>

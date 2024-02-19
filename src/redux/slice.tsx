@@ -2,6 +2,35 @@ import { createSlice, PayloadAction  } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import  {IState, IMonth, IDay} from "../interfaces/interfaces";
 import { HolidayAPI } from "../services/api";
+// import { createYearCalendar } from "./store";
+
+function getDaysInMonth(month: number, year: number) {
+    // Первый день месяца с номером 0 - последний день предыдущего месяца
+    return new Date(year, month + 1, 0).getDate();
+  }
+function createYearCalendar(year: number) {
+    const months = [];
+    for (let month = 0; month < 12; month++) {
+        const daysInMonth = getDaysInMonth(month, year);
+        const monthObj: IMonth = {
+            id: month + 1,
+            days: []
+        };
+        for (let day: number = 1; day <= daysInMonth; day++) {
+            monthObj.days.push({
+                id: day,
+                items: [],
+                holidays: ''
+            });
+        }
+        months.push(monthObj);
+    }
+    return {
+            yearNumber: year,
+            months,
+            country: null
+        };
+}
 
 const holidayAPI = new HolidayAPI();
 
@@ -32,6 +61,10 @@ const calendarSlice = createSlice({
     reducers: {
         changeYear: (state , action: PayloadAction<number>) => {
             state.yearNum = action.payload;
+            if(state.yearData) {
+                const isYearIn = state.yearData.some(year=> year.yearNumber === action.payload);
+                if(!isYearIn) state.yearData = [...state.yearData, createYearCalendar(action.payload)];
+            }
         },
         changeMonth: (state , action: PayloadAction<number>) => {
             state.month = action.payload;
@@ -55,15 +88,18 @@ const calendarSlice = createSlice({
                     changedDays.push(item);
                 });
                 const newYearData = [...state.yearData.map((year)=>{
-                    const {months} = year;
-                    const newMonths=months.map((month)=>{
-                        if(month.id === state.month && changedDays) {
-                            return {...month, days: [...changedDays]}
-                        }
-                        return month;
-                    })
-                    const newYear = {...year, months: newMonths}
-                    return newYear;
+                    if(year.yearNumber === state.yearNum) {
+                        const {months} = year;
+                        const newMonths=months.map((month)=>{
+                            if(month.id === state.month && changedDays) {
+                                return {...month, days: [...changedDays]}
+                            }
+                            return month;
+                        })
+                        const newYear = {...year, months: newMonths}
+                        return newYear;
+                    }
+                    return year;
                 })];
                 state.yearData = [...newYearData];
             }
