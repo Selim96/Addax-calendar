@@ -7,6 +7,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { HolidayAPI } from '../../services/api';
 import Download from '../Download';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const months = [
     "January", "February", "March", "April",
@@ -50,11 +52,19 @@ const Header: React.FC = () => {
     }
 
     const increaseMonth = () => {
-        if(monthNum === 12) return;
+        if(monthNum === 12) {
+            setMonthNum(1);
+            setYearNum(yearNum + 1);
+            return;
+        };
         setMonthNum(monthNum +1);
     }
     const decreaseMonth = () => {
-        if(monthNum === 1) return;
+        if(monthNum === 1) {
+            setMonthNum(12);
+            setYearNum(yearNum - 1);
+            return
+        };
         setMonthNum(monthNum -1);
     }
 
@@ -81,8 +91,9 @@ const Header: React.FC = () => {
     return <header className={s.header}>
         <div className={s.navigation}>
             <div className={s.change_buttons}>
-                <div className={s.button} onClick={increaseMonth}><KeyboardArrowDownIcon /></div>
-                <div className={s.button} onClick={decreaseMonth}><KeyboardArrowUpIcon/></div>
+                
+                <div className={s.button} onClick={decreaseMonth}><KeyboardArrowLeftIcon/></div>
+                <div className={s.button} onClick={increaseMonth}><KeyboardArrowRightIcon /></div>
             </div>
             <div className={s.select_month}>
                     <select value={monthNum} onChange={onChangeMonthNum} className={s.selector}>
