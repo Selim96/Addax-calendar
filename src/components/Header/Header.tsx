@@ -19,6 +19,12 @@ const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
 const currentMonthIndex = currentDate.getMonth() +1;
 
+const arrOfYears: number[] = [];
+for(let y = currentYear; y <= currentYear+20; y++) {
+    arrOfYears.push(y);
+}
+console.log(arrOfYears)
+
 const holidayAPI = new HolidayAPI();
 
 const Header: React.FC = () => {
@@ -33,6 +39,10 @@ const Header: React.FC = () => {
     const onChangeMonthNum = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = Number(e.target.value);
         setMonthNum(value);
+    }
+    const onChangeYearNum = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = Number(e.target.value);
+        setYearNum(value);
     }
 
     const onChangeLabel = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -70,6 +80,9 @@ const Header: React.FC = () => {
             </div>
             <div className={s.select_month}>
                     <select value={monthNum} onChange={onChangeMonthNum} className={s.selector}>
+                        {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
+                    </select>
+                    <select value={yearNum} onChange={onChangeYearNum} className={s.selector}>
                         {months.map((month, index) => <option key={index} value={index +1}>{month}</option>)}
                     </select>
             </div>

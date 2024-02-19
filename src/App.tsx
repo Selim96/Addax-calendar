@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Loader from './components/Loader';
 import Header from './components/Header';
 import ErrorPage from './Pages/ErrorPage';
+import { Analytics } from '@vercel/analytics/react';
 
 const Homepage = lazy(() => import("./Pages/Homepage"));
 const CalendarGrid = lazy(() => import("./components/CalendarGrid"));
@@ -19,6 +20,7 @@ const App: React.FC = () => {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Suspense>
+      <Analytics />
     </>
   );
 };
