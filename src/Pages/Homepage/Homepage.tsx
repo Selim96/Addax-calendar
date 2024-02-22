@@ -15,6 +15,7 @@ const Homepage: React.FC = () => {
     const weekDaysNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'San'];
 
     const daysCards=useAppSelector(allSelectors.getDaysCards);
+    const currentMonth = useAppSelector(allSelectors.getMonthNum);
 
     const dispatch = useAppDispatch();
 
@@ -25,12 +26,13 @@ const Homepage: React.FC = () => {
 
     function dragEndHandler(e: React.DragEvent<HTMLDivElement>): void {
         e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.border = 'none';
+        // e.currentTarget.style.border = 'none';
     }
 
     function dragOverHander(e: React.DragEvent<HTMLDivElement>): void {
         e.preventDefault();
-        e.currentTarget.style.border = '1px solid ';
+        e.currentTarget.style.boxShadow = '0px 0px 5px 0px rgba(81, 182, 223, 0.734)';
+        // e.currentTarget.style.border = '1px solid ';
     }
     function dragOverHanderItem(e: React.DragEvent<HTMLDivElement>): void {
         e.preventDefault();
@@ -44,7 +46,7 @@ const Homepage: React.FC = () => {
 
     function dragLeaveHandler(e:React.DragEvent<HTMLDivElement>) {
         e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.border = 'none';
+        // e.currentTarget.style.border = 'none';
     }
 
     function dropOnBoardHandler(e:React.DragEvent<HTMLDivElement>, day: IDay) {
@@ -71,9 +73,16 @@ const Homepage: React.FC = () => {
             dispatch(changeDayCard(newAllDays));
             dispatch(saveChanges());
             e.currentTarget.style.scale = '1';
-            e.currentTarget.style.border = 'none';
+            // e.currentTarget.style.border = 'none';
+            e.currentTarget.style.boxShadow = 'none';
         }
     }
+
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth() +1;
+    const currentDay = currentDate.getDate();
+
+    const regularDayClass = currentMonthIndex === currentMonth;
 
     return (
             <main className={s.mainBox}>
@@ -91,8 +100,10 @@ const Homepage: React.FC = () => {
                                 </div>
                             )
                         }
+                        
                         return (
-                        <div key={board.id} className={s.board} style={board.holidays !== '' ? {backgroundColor: "hsl(11deg 74.85% 81.8%)"} : {}}
+                        <div key={board.id} className={`${s.board} ${board.id === currentDay && regularDayClass ? s.todayClass : ''}`} style={board.holidays !== '' ? {backgroundColor: "hsl(11deg 74.85% 81.8%)"} : {}}
+                        
                             onDragOver={dragOverHander}
                             onDrop={(e)=>dropOnBoardHandler(e, board)}
                             onDragLeave={dragLeaveHandler}

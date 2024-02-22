@@ -1,14 +1,20 @@
-.link {
+.wrapper {
+    margin-right: 15px;
+}
+
+.button {
     font-size: 15px;
     line-height: 1.15;
     text-decoration: none;
     color: var(--line-color);
     border: 1px solid;
+    background-color: transparent;
     border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 6px;
+    cursor: pointer;
     &:hover {
         color: var(--black-color);
         border-color: black;

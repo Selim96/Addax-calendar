@@ -3,12 +3,15 @@ import s from './Header.module.scss';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {filterByLabels, changeMonth, changeYear} from "../../redux/slice";
 import allSelectors from '../../redux/selectors';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { HolidayAPI } from '../../services/api';
 import Download from '../Download';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import GetScrinShot from '../GetScrinShot';
+
+interface IProp {
+    canvasRef: React.RefObject<HTMLDivElement>
+}
 
 const months = [
     "January", "February", "March", "April",
@@ -28,7 +31,7 @@ for(let y = currentYear; y <= currentYear+20; y++) {
 
 const holidayAPI = new HolidayAPI();
 
-const Header: React.FC = () => {
+const Header: React.FC<IProp> = ({canvasRef}) => {
     const [yearNum, setYearNum] = useState<number>(currentYear);
     const [monthNum, setMonthNum] = useState<number>(currentMonthIndex); // 1-12
     const [label, setLabel] = useState('all');
@@ -116,8 +119,10 @@ const Header: React.FC = () => {
             {`${months[monthNum-1]} ${yearNum}`}
         </div>
         
-        <Download/>
-
+        <div className={s.interfaces}>
+            <GetScrinShot canvasRef={canvasRef}/>
+            <Download/> 
+        </div>
     </header>
 };
 

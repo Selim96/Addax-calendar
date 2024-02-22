@@ -50,6 +50,9 @@
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
+    &.todayClass {
+        border: 2px solid var(--header-color);
+    }
     &:nth-child(7n) {
         background-color: var( --item-weekend-color)
     }
