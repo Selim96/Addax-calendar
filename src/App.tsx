@@ -4,6 +4,8 @@ import Loader from './components/Loader';
 import Header from './components/Header';
 import ErrorPage from './Pages/ErrorPage';
 import { Analytics } from '@vercel/analytics/react';
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 const Homepage = lazy(() => import("./Pages/Homepage"));
 const CalendarGrid = lazy(() => import("./components/CalendarGrid"));
@@ -21,6 +23,7 @@ const App: React.FC = () => {
         </Routes>
       </Suspense>
       <Analytics />
+      <ToastContainer/>
     </div>
   );
 };

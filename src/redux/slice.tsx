@@ -176,7 +176,7 @@ const calendarSlice = createSlice({
             state.loading = false;
             state.error = payload;
             if (payload) {
-                toast.error("Fatal error");
+                toast.error("Error to load holidays!");
             }
         });
         
