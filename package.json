@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
+    "@types/dom-to-image": "^2.6.7",
     "@types/jest": "^27.0.1",
     "@types/lodash.debounce": "^4.0.7",
     "@types/mark.js": "^8.11.8",
@@ -20,6 +21,7 @@
     "@types/react-lazy-load-image-component": "^1.5.3",
     "@vercel/analytics": "^1.2.1",
     "axios": "^1.2.2",
+    
     "lazysizes": "^5.3.2",
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
@@ -33,6 +35,7 @@
     "redux": "^4.2.0",
     "sass": "^1.57.1",
     "typescript": "^4.4.2",
+    
     "web-vitals": "^2.1.0"
   },
   "scripts": {

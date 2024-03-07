@@ -9,11 +9,11 @@ const Homepage = lazy(() => import("./Pages/Homepage"));
 const CalendarGrid = lazy(() => import("./components/CalendarGrid"));
 
 const App: React.FC = () => {
- 
+  const canvasRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <>
-      <Header />
+    <div ref={canvasRef}>
+      <Header canvasRef={canvasRef}/>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -21,7 +21,7 @@ const App: React.FC = () => {
         </Routes>
       </Suspense>
       <Analytics />
-    </>
+    </div>
   );
 };
 

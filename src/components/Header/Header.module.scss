@@ -84,23 +84,8 @@
         font-weight: 700;
         text-shadow: 0 2px 5px var(--line-color);
     }
-    // & .all {
-       
-        
-    //     color: var(--line-color);
-    // }
-    // & .green {
-       
-       
-    //     color: var(--green-label);
-    // }
-    // & .yellow {
-        
-        
-    //     color: var(--yellow-label);
-    // }
-    // & .red {
-        
-    //     color: var(--red-label);
-    // }
+}
+
+.interfaces {
+    display: flex;
 }
