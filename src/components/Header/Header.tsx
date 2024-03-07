@@ -7,7 +7,7 @@ import { HolidayAPI } from '../../services/api';
 import Download from '../Download';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import GetScrinShot from '../GetScrinShot';
+
 
 interface IProp {
     canvasRef: React.RefObject<HTMLDivElement>
@@ -120,7 +120,7 @@ const Header: React.FC<IProp> = ({canvasRef}) => {
         </div>
         
         <div className={s.interfaces}>
-            <GetScrinShot canvasRef={canvasRef}/>
+            
             <Download/> 
         </div>
     </header>
